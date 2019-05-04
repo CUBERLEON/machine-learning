@@ -1,0 +1,12 @@
+natsort
+pytesseract
+numpy
+matplotlib
+memory_profiler
+opencv-python
+pandas
+tensorflow-gpu
+keras
+sklearn
+opencv-python
+scikit-image
