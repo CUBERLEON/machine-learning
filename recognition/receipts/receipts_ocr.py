@@ -1,12 +1,11 @@
-import cv2
-import sys
 import re
-import pytesseract
-import numpy as np
-from natsort import natsorted
-from skimage.morphology import watershed
 
-from common.config import REMOTE_DATA_URL, REMOTE_DATA_DIR
+import cv2
+import numpy as np
+import pytesseract
+from natsort import natsorted
+
+from common.config import REMOTE_DATA_DIR
 
 
 def preprocess_v1(img, img_init_width=1800, img_width=1200):
@@ -95,11 +94,12 @@ def preprocess_v3(img, img_init_width=1800, img_width=1200):
 if __name__ == '__main__':
     images_dir = REMOTE_DATA_DIR / "receipts"
 
-    for image_path in natsorted(images_dir.iterdir()):
+    # image_pathes = natsorted(images_dir.iterdir())
+    image_pathes = [images_dir / "4.jpg"]
+
+    for image_path in image_pathes:
         img_orig = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE | cv2.IMREAD_IGNORE_ORIENTATION)
-        # img = preprocess_v3(img_orig.copy())
-        img = img_orig.copy()
-        print(img.shape)
+        img = preprocess_v3(img_orig)
 
         cv2.imshow('image_orig', cv2.resize(img_orig, (600, 800)))
         cv2.moveWindow('image_orig', 1700, 0)
@@ -107,11 +107,10 @@ if __name__ == '__main__':
         cv2.moveWindow('image', 2300, 0)
 
         # '--oem 1' for using LSTM OCR Engine
-        alphabet = 'abcdefghijklmnopqrstuvwxyz'
         text = pytesseract.image_to_string(img,
                                            config=f'-l eng+ukr+rus --oem 1 --psm 3')
         filtered_text = "\n".join(filter(lambda x: not re.match(r'^\s*$', x), text.splitlines()))
-        print(filtered_text.lower()  )
+        print(filtered_text.lower())
 
         cv2.waitKey()
 
