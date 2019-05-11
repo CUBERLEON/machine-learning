@@ -151,20 +151,17 @@ def find_receipt(img):
     if len(conv_hull) < 4:
         return None
 
-    print(conv_hull)
-    outline = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-
     _, _, br_w, br_h = cv2.boundingRect(conv_hull)
 
     result = None
 
-    print(br_w + br_h, (img.shape[0] + img.shape[1]))
     if br_w + br_h < 0.5 * (img.shape[0] + img.shape[1]):
         return None
 
     if len(conv_hull) == 4:
         result = conv_hull
 
+    outline = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
     cv2.drawContours(outline, [conv_hull], -1, (0, 255, 0), 3)
     cv2.imshow("Outline", outline)
 
@@ -344,8 +341,8 @@ if __name__ == '__main__':
     # args = vars(ap.parse_args())
     # image_pathes = [args["image"]]
 
-    # images_dir = REMOTE_DATA_DIR / "receipts"
-    images_dir = REMOTE_DATA_DIR / "receipts" / "test"
+    images_dir = REMOTE_DATA_DIR / "receipts"
+    # images_dir = REMOTE_DATA_DIR / "receipts" / "test"
     image_pathes = natsorted(images_dir.iterdir())
 
     # image_pathes = [images_dir / "7.jpg"]
